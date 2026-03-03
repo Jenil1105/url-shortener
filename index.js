@@ -3,8 +3,7 @@ const urlRoute = require("./routes/url");
 const { connectToMongo } = require("./connectMongo");
 const URL = require("./models/url");
 
-mongoUrl = "mongodb+srv://jenilURL:jJ123456%40@cluster0.yw2lsnc.mongodb.net/?appName=Cluster0"
-
+mongoUrl = process.env.MONGO_URL;
 const app = express();
 const PORT = 8000;
 
