@@ -1,47 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home page</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>URL Shortener</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1> URL Shortener </h1>
-    <% if(locals.id) {%>
-        <p>URL generated : http://localhost:8000/url/<%=id %></p>
-    <% } %>
-    <div>
-        <form method="POST" action="/url">
-            <label>Enter your original URL: </label>
-            <input
-                type="text"
-                name="url"
-                placeholder="https://example.com"
-            >
-            <button type="submit">Generate</button>
-        </form>
+
+<body class="bg-gray-100 min-h-screen">
+
+  <div class="max-w-4xl mx-auto p-6">
+    
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+      URL Shortener
+    </h1>
+
+    <div class="bg-white p-6 rounded-2xl shadow-md mb-6">
+      <form method="POST" action="/url" class="flex gap-3">
+        <input
+          type="text"
+          name="url"
+          placeholder="Enter your URL (https://example.com)"
+          required
+          class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <button
+          type="submit"
+          class="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          Generate
+        </button>
+      </form>
+
+      <% if(locals.id) { %>
+        <div class="mt-4 p-3 bg-green-100 text-green-700 rounded-lg flex justify-between items-center">
+          <a href="http://localhost:8000/url/<%= id %>" target="_blank" class="font-medium">
+            http://localhost:8000/url/<%= id %>
+          </a>
+          <button
+            onclick="navigator.clipboard.writeText('http://localhost:8000/url/<%= id %>')"
+            class="ml-4 text-sm bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+          >
+            Copy
+          </button>
+        </div>
+      <% } %>
     </div>
+
     <% if (locals.urls) { %>
-        <div>
-            <table>
-                <thead>
-                    <th>Sr. No.</th>
-                    <th>ShortID</th>
-                    <th>Redirect url</th>
-                    <th>clicks</th>
-                </thead>
-                <tbody>
-                    <% urls.forEach((url, index) => { %>
-                        <tr>
-                            <td><%= index+1 %></td>
-                            <td><%= url.shortId %></td>
-                            <td><%= url.redirectedUrl %></td>
-                            <td><%= url.visitHistory.length %></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-        <% } %>
+      <div class="bg-white p-6 rounded-2xl shadow-md">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Analytics</h2>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-blue-500 text-white">
+                <th class="py-2 px-3 text-center">#</th>
+                <th class="py-2 px-3 text-center">Short ID</th>
+                <th class="py-2 px-3 text-center">Original URL</th>
+                <th class="py-2 px-3 text-center">Clicks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% urls.forEach((url, index) => { %>
+                <tr class="text-center border-b hover:bg-gray-50">
+                  <td class="py-2"><%= index + 1 %></td>
+                  <td class="py-2 font-medium text-blue-600">
+                    <%= url.shortId %>
+                  </td>
+                  <td class="py-2">
+                    <a href="<%= url.redirectedUrl %>" target="_blank" class="text-blue-500 hover:underline">
+                      Visit
+                    </a>
+                  </td>
+                  <td class="py-2">
+                    <%= url.visitHistory.length %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+
 </body>
 </html>
